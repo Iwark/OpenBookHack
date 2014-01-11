@@ -9,14 +9,12 @@ The viewer is the default viewer for Readium.js, a JS library for rendering EPUB
 
 ## Getting started
   * [Basic EPUB viewer](#basic-epub-viewer)
+  * [Embeddable EPUB Viewer](#embeddable-epub-viewer)
   * [Chrome packaged app](#chrome-packaged-app)
   * [Custom EPUB management system](#custom-epub-management-and-viewer-application)
   * [Running the Tests](#running-the-tests)
 
 ### Basic EPUB Viewer
-
-#### Visit online demo
-~~You can visit the hosted [version](http://readium.github.io/readium-js-viewer).~~ Currently running an older version
 
 #### Clone into your own web server
 
@@ -29,14 +27,25 @@ To test the ReadiumJS viewer on any static web server:
 
 #### Clone and run an embedded Node.JS web server
 
-You can also use the Grunt build configuration contained in cloned sources to run an embedded Node.JS + Express web server that serves the demo application:
+To build and run the browser-based version of the js-viewer (as opposed to the Chrome extension), you need to:
 
-   * install [Node.JS](http://nodejs.org) (details depend on your operating system)
-   * install the Grunt build tool: `npm install -g grunt-cli`
-   * install the project's dependencies: `npm install`
-   * run the embedded web server using the Grunt build system: `grunt`
-   * visit [http://localhost:8080/simpleviewer.html?epub=epub_content/moby_dick](http://localhost:8080/simpleviewer.html?epub=epub_content/moby_dick) in your browser
-   * when done, on the console press CTRL-C to interrupt Grunt build process and the embedded web server
+* Install Node.JS (details depend on your operating system)
+* Install the Grunt Command Line Interface build tool: sudo npm install -g grunt-cli
+    * Note that the -g argument instructs npm to install the grunt tool globally (i.e. for everyone)
+* Sync to the github repository:
+    * git clone --recursive https://github.com/readium/readium-js-viewer.git
+    * Be sure to use the --recursive tag since this repo, like all the Launchers and Viewers in the Readium projects, uses submodules.  Without the --recursive flag, the clone will get the folder but not its contents.
+* Install the project's dependencies: npm install
+    * Note that this must be done twice:
+        * In the root folder (e.g. readium-js-viewer)
+        * In the readium-js library folder, i.e readium-js-viewer/readium-js
+* Run the embedded web server using the Grunt build system: grunt
+    * This reads the grunt command file, gruntFile.js
+    * Visit http://localhost:8080/simpleviewer.html?epub=epub_content/moby_dick in your browser
+* When done, you must terminate the Grunt build process and the embedded web server
+    * On Windows, press Ctrl-C
+    * On OSX, close the terminal window
+
 
 One of advantages of the embedded Node.JS + Express web server is that it supports HTTP Byte Serving out of the box, without additional configuration, required for efficient handling of zipped EPUB files.
    
@@ -59,15 +68,39 @@ Assuming that you have Grunt and project's dependencies already installed (see a
 
     grunt update-readium
 
-### Chrome Packaged App
-To run the chrome packaged app, you will need to do the following:
+### Embeddable EPUB Viewer
 
-   * install [Node.JS](http://nodejs.org) (details depend on your operating system)
-   * install the Grunt build tool: `npm install -g grunt-cli`
-   * install the project's dependencies: `npm install`
-   * Build the application `grunt chromeApp`
-   * Load the app as an unpacked extension from `(project-root)/build/chrome-app`. [Directions here](http://developer.chrome.com/extensions/getstarted.html#unpacked)
-   * Open the App in Chrome.
+You can host an embeddable epub viewer using the same instructions as the [Basic EPUB viewer](#basic-epub-viewer). For example, if you wanted to add epub content to a blog or similar.
+
+Follow the same instructions as setting up the [Basic EPUB viewer](#basic-epub-viewer) then embed the epub reader using an iframe like so
+
+```html
+<iframe width="600" height="400" src="http://localhost:8080/simpleviewer.html?epub=epub_content/moby_dick&amp;embedded=true" style="border:1px #ddd solid;" allowfullscreen mozallowfullscreen webkitallowfullscreen></iframe>
+```
+
+Note the `embedded=true` query parameter. This adds a special UI and handling for a smaller screen. See the `embed.html` file in the root of the source tree for a complete example that works with the [Basic EPUB viewer](#basic-epub-viewer) setup.
+
+
+## Chrome Packaged App
+
+To run the Chrome packaged app, you will need to do the following:
+
+* install Node.JS (details depend on your operating system)
+* Install the Grunt Command Line Interface build tool:  sudo npm install -g grunt-cli
+    * Note that the -g argument instructs npm to install the grunt tool globally (i.e. for everyone)
+* Sync to the github repository:
+    * git clone --recursive https://github.com/readium/readium-js-viewer.git
+        * Be sure to use the --recursive tag since this repo, like all the Launchers and Viewers in the Readium projects, uses submodules.          * Without the --recursive flag, the clone will get the folder but not its contents.
+* Install the project's dependencies: npm install
+    * Note that this must be done twice:
+        * In the root folder (e.g. readium-js-viewer)
+        * In the readium-js library folder named readium-js
+* Build the application:  grunt chromeApp
+* Load the app as an unpacked extension from (project-root)/build/chrome-app. 
+    * More detailed information is [here](https://www.google.com/url?q=http%3A%2F%2Fdeveloper.chrome.com%2Fextensions%2Fgetstarted.html%23unpacked)
+    * Note that there will be a chrome-app folder in the root folder but that is not the correct folder, the correct folder is in the build subdirectory. 
+Open the App in Chrome.
+
 
 ### Custom EPUB management and viewer application
 The code that runs the chrome packaged app can also be run on a web server. However, it requires a backend to store and retrieve EPUB files. You would have to implement this yourself. You can see this in action by following the directions to [run a node web server](#clone-and-run-an-embedded-nodejs-web-server) and then navigating to http://localhost:8080/index.html. The backend the example uses is just static files so it doesn't support updating. 
