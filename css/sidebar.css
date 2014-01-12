@@ -1,0 +1,18 @@
+#sidebar{
+  float:right;
+  width:30%;
+  height:100%;
+  display: none;
+  z-index: 2;
+  background-color: rgba(0,0,0,.7);
+  color: white;
+  padding:20px;
+}
+
+.sidebar-visible #sidebar{
+  display: block;
+}
+
+.sidebar-visible #reading-area{
+  right: 30%;
+}
